@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SarahNLP", "SarahNLP\SarahNLP.csproj", "{97E01DB8-DD9F-4854-9B05-555B81908151}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{97E01DB8-DD9F-4854-9B05-555B81908151}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97E01DB8-DD9F-4854-9B05-555B81908151}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97E01DB8-DD9F-4854-9B05-555B81908151}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97E01DB8-DD9F-4854-9B05-555B81908151}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
