@@ -5,15 +5,29 @@ namespace SarahNLP.Models
 {
     public class SaraDbContext : DbContext
     {
+        public SaraDbContext()
+        {
+        }
+
         public SaraDbContext(DbContextOptions<SaraDbContext> options)
             : base(options)
         {
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+            => options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=Sara;Trusted_Connection=True;");
+
+        /// <summary>
+        /// The message types are modeled as Table Per Hierarchy w/ a concrete base class, Message
+        /// </summary>
+        public DbSet<Message> Messages { get; set; }
+
         public DbSet<SmsThread> SmsThreads { get; set; }
         public DbSet<SmsMessage> SmsMessages { get; set; }
+
         public DbSet<ContentMessage> ContentMessages { get; set; }
-        public DbSet<ToneScore> Tones{get;set;}
+        public DbSet<ToneScore> ToneScores { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,47 +38,55 @@ namespace SarahNLP.Models
 
         public static SaraDbContext CreateDatabaseOfMessages()
         {
+            const string connection =
+                "Server=(localdb)\\MSSQLLocalDB;Database=Sara;Trusted_Connection=True;";
+
             var options = new DbContextOptionsBuilder<SaraDbContext>()
-                .UseInMemoryDatabase(databaseName: "Test")
+                .UseSqlServer(connection)
                 .Options;
 
-            var context = new SaraDbContext(options);
-            {
-                var message = new ContentMessage()
-                {
-                    ContentText = "This is an email.  How are you today?"
-                };
-                var thread = new SmsThread();
+            //var options = new DbContextOptionsBuilder<SaraDbContext>()
+            //    .UseInMemoryDatabase(databaseName: "Test")
+            //    .Options;
+
+//            var context = new SaraDbContext(options);
+//            {
+//                var message = new ContentMessage()
+//                {
+//                    ContentText = "This is an email.  How are you today?"
+//                };
+//                var thread = new SmsThread();
 
 
-                thread.SmsMessages.Add(new SmsMessage()
-                {
-                    MessageText = "Hello, I'm having a problem with your product.",
-                    User = "customer",
-                });
+//                thread.SmsMessages.Add(new SmsMessage()
+//                {
+//                    MessageText = "Hello, I'm having a problem with your product.",
+//                    User = "customer",
+//                });
 
-                thread.SmsMessages.Add(new SmsMessage()
-                {
-                    MessageText = "OK, let me know what's going on, please.",
-                    User = "agent",
-                });
+//                thread.SmsMessages.Add(new SmsMessage()
+//                {
+//                    MessageText = "OK, let me know what's going on, please.",
+//                    User = "agent",
+//                });
 
-                thread.SmsMessages.Add(new SmsMessage()
-                {
-                    MessageText = "Well, nothing is working :(.",
-                    User = "customer",
-                });
-                thread.SmsMessages.Add(new SmsMessage()
-                {
-                    MessageText = "Sorry to hear that",
-                    User = "agent",
-                });
+//                thread.SmsMessages.Add(new SmsMessage()
+//                {
+//                    MessageText = "Well, nothing is working :(.",
+//                    User = "customer",
+//                });
+//                thread.SmsMessages.Add(new SmsMessage()
+//                {
+//                    MessageText = "Sorry to hear that",
+//                    User = "agent",
+//                });
 
-                context.SmsThreads.Add(thread);
-                context.ContentMessages.Add(message);
-                context.SaveChanges();
-                return context;
-            }
+//                context.SmsThreads.Add(thread);
+////                context.ContentMessages.Add(message);
+//                context.SaveChanges();
+//                return context;
+//            }
+            return null;
         }
     }
 }

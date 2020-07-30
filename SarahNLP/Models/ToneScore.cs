@@ -5,6 +5,10 @@ namespace SarahNLP.Models
 {
     public class ToneScore
     {
+        public ToneScore()
+        {
+        }
+
         [Key]
         public int ToneScoreId { get; set; }
 
@@ -16,6 +20,7 @@ namespace SarahNLP.Models
         public Message Message { get; set; }
 
         public int? SmsMessageId {get;set;}  
+        [ForeignKey(nameof(SmsMessageId))]
         public SmsMessage SmsMessage{get;set;}
         
         public double? Score { get; set; }

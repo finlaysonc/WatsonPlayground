@@ -5,12 +5,11 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace SarahNLP.Models
 {
-    [Table("SmsMessage")]
     public class SmsMessage
     {
         public SmsMessage()
         {
-            ToneScores = new List<ToneScore>();
+         //   ToneScores = new List<ToneScore>();
         }
 
         public int SmsMessageId { get; set; }
@@ -26,7 +25,7 @@ namespace SarahNLP.Models
         [ForeignKey(nameof(MessageId))]
         public SmsThread SmsThread { get; set; }
 
-        [InverseProperty(nameof(ToneScore.SmsMessageId))]
+        [InverseProperty(nameof(ToneScore.SmsMessage))]
         public ICollection<ToneScore> ToneScores { get; set; }
     }
 }

@@ -38,6 +38,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Migrations\20200730164839_InitialCreate.cs" />
+    <Compile Include="Migrations\20200730164839_InitialCreate.designer.cs">
+      <DependentUpon>20200730164839_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\SaraDbContextModelSnapshot.cs" />
     <Compile Include="Models\ContentMessage.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\SaraDbContext.cs" />
@@ -65,6 +70,14 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational">
       <Version>3.1.6</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer">
+      <Version>3.1.6</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+      <Version>3.1.6</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="ServiceStack.Text">
       <Version>5.9.0</Version>
