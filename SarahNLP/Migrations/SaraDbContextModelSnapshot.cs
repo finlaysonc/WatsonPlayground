@@ -128,7 +128,7 @@ namespace SarahNLP.Migrations
             modelBuilder.Entity("SarahNLP.Models.ToneScore", b =>
                 {
                     b.HasOne("SarahNLP.Models.Message", "Message")
-                        .WithMany()
+                        .WithMany("ToneScores")
                         .HasForeignKey("MessageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

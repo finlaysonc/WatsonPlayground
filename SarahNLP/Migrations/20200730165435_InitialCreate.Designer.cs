@@ -10,7 +10,7 @@ using SarahNLP.Models;
 namespace SarahNLP.Migrations
 {
     [DbContext(typeof(SaraDbContext))]
-    [Migration("20200730164839_InitialCreate")]
+    [Migration("20200730165435_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -130,7 +130,7 @@ namespace SarahNLP.Migrations
             modelBuilder.Entity("SarahNLP.Models.ToneScore", b =>
                 {
                     b.HasOne("SarahNLP.Models.Message", "Message")
-                        .WithMany()
+                        .WithMany("ToneScores")
                         .HasForeignKey("MessageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -12,9 +12,13 @@ namespace SarahNLP
     {
         public static void Main(string[] args)
         {
-            //WatsonToneAnalyzer analyzer = new WatsonToneAnalyzer();
-            //var db = SaraDbContext.CreateDatabaseOfMessages();
-            //analyzer.ProcessMessages(db);
+            var db = SaraDbContext.CreateContextToLocalDb();
+            db.Database.EnsureDeleted();
+            db.Database.Migrate();
+            db.SeedData();
+            WatsonToneAnalyzer analyzer = new WatsonToneAnalyzer();
+
+            analyzer.ProcessMessages(db);
         }
     }
 }

@@ -14,8 +14,8 @@ namespace SarahNLP.Models
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=Sara;Trusted_Connection=True;");
+        const string connection =
+            "Server=(localdb)\\MSSQLLocalDB;Database=Sara;Trusted_Connection=True;";
 
         /// <summary>
         /// The message types are modeled as Table Per Hierarchy w/ a concrete base class, Message
@@ -29,6 +29,10 @@ namespace SarahNLP.Models
         public DbSet<ToneScore> ToneScores { get; set; }
 
 
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+            => options.UseSqlServer(connection);
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Message>()
@@ -36,57 +40,59 @@ namespace SarahNLP.Models
         }
 
 
-        public static SaraDbContext CreateDatabaseOfMessages()
+        public static SaraDbContext CreateContextToLocalDb()
         {
-            const string connection =
-                "Server=(localdb)\\MSSQLLocalDB;Database=Sara;Trusted_Connection=True;";
-
             var options = new DbContextOptionsBuilder<SaraDbContext>()
                 .UseSqlServer(connection)
                 .Options;
+            return new SaraDbContext(options);
+        }
 
-            //var options = new DbContextOptionsBuilder<SaraDbContext>()
-            //    .UseInMemoryDatabase(databaseName: "Test")
-            //    .Options;
+        public static SaraDbContext CreateInMemoryContext()
+        {
 
-//            var context = new SaraDbContext(options);
-//            {
-//                var message = new ContentMessage()
-//                {
-//                    ContentText = "This is an email.  How are you today?"
-//                };
-//                var thread = new SmsThread();
+            var options = new DbContextOptionsBuilder<SaraDbContext>()
+                .UseInMemoryDatabase("SaraDb")
+                .Options;
+            return new SaraDbContext(options);
+        }
+
+        public void SeedData()
+        {
+            var message = new ContentMessage()
+            {
+                ContentText = "This is an email.  How are you today?"
+            };
+            var thread = new SmsThread();
 
 
-//                thread.SmsMessages.Add(new SmsMessage()
-//                {
-//                    MessageText = "Hello, I'm having a problem with your product.",
-//                    User = "customer",
-//                });
+            thread.SmsMessages.Add(new SmsMessage()
+            {
+                MessageText = "Hello, I'm having a problem with your product.",
+                User = "customer",
+            });
 
-//                thread.SmsMessages.Add(new SmsMessage()
-//                {
-//                    MessageText = "OK, let me know what's going on, please.",
-//                    User = "agent",
-//                });
+            thread.SmsMessages.Add(new SmsMessage()
+            {
+                MessageText = "OK, let me know what's going on, please.",
+                User = "agent",
+            });
 
-//                thread.SmsMessages.Add(new SmsMessage()
-//                {
-//                    MessageText = "Well, nothing is working :(.",
-//                    User = "customer",
-//                });
-//                thread.SmsMessages.Add(new SmsMessage()
-//                {
-//                    MessageText = "Sorry to hear that",
-//                    User = "agent",
-//                });
+            thread.SmsMessages.Add(new SmsMessage()
+            {
+                MessageText = "Well, nothing is working :(.",
+                User = "customer",
+            });
+            thread.SmsMessages.Add(new SmsMessage()
+            {
+                MessageText = "Sorry to hear that",
+                User = "agent",
+            });
 
-//                context.SmsThreads.Add(thread);
-////                context.ContentMessages.Add(message);
-//                context.SaveChanges();
-//                return context;
-//            }
-            return null;
+            SmsThreads.Add(thread);
+            ContentMessages.Add(message);
+            SaveChanges();
         }
     }
 }
+

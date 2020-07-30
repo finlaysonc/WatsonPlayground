@@ -19,7 +19,7 @@ namespace SarahNLP.Models
 
         public DateTimeOffset Craeted { get; set; }
 
-        //[InverseProperty(nameof(ToneScore.Message))]
-        //public ICollection<ToneScore> ToneScoresMessages {get; set; }
+        [InverseProperty(nameof(ToneScore.Message))]
+        public ICollection<ToneScore> ToneScores { get; set; }
     }
 }

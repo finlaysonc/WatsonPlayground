@@ -38,9 +38,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\20200730164839_InitialCreate.cs" />
-    <Compile Include="Migrations\20200730164839_InitialCreate.designer.cs">
-      <DependentUpon>20200730164839_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\20200730165435_InitialCreate.cs" />
+    <Compile Include="Migrations\20200730165435_InitialCreate.designer.cs">
+      <DependentUpon>20200730165435_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\SaraDbContextModelSnapshot.cs" />
     <Compile Include="Models\ContentMessage.cs" />

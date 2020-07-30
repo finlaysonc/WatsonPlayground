@@ -9,7 +9,7 @@ namespace SarahNLP.Models
     {
         public SmsMessage()
         {
-         //   ToneScores = new List<ToneScore>();
+            ToneScores = new List<ToneScore>();
         }
 
         public int SmsMessageId { get; set; }
