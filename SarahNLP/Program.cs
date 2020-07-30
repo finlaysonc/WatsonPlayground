@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using IBM.Cloud.SDK.Core.Authentication.Iam;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +14,15 @@ namespace SarahNLP
         public static void Main(string[] args)
         {
             var db = SaraDbContext.CreateContextToLocalDb();
-            db.Database.EnsureDeleted();
-            db.Database.Migrate();
-            db.SeedData();
-            WatsonToneAnalyzer analyzer = new WatsonToneAnalyzer();
+            //db.Database.EnsureDeleted();
+            //db.Database.Migrate();
+            //db.SeedData();
 
+            //var apiKey="v5A8Bi-pEFpofuaFlqAFgwOtLe-wBVsn1z4WT6JiHyeE";
+            //var url = "https://api.us-south.tone-analyzer.watson.cloud.ibm.com/instances/94200b79-e762-4114-9d4f-9797fb3526d8";
+            WatsonToneAnalyzer analyzer = new WatsonToneAnalyzer(
+                ConfigurationManager.AppSettings["WatsonToneAnalyzerApiKey"],
+                ConfigurationManager.AppSettings["WatsonToneAnalyzerUrl"]);;
             analyzer.ProcessMessages(db);
         }
     }

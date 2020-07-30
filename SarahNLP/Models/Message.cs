@@ -12,6 +12,7 @@ namespace SarahNLP.Models
     {
         public Message()
         {
+            ToneScores = new List<ToneScore>();
         }
 
         [Key]

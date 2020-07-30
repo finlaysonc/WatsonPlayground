@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Web.UI.WebControls;
 using IBM.Cloud.SDK.Core.Authentication.Iam;
 using IBM.Cloud.SDK.Core.Http;
 using IBM.Watson.ToneAnalyzer.v3;
@@ -16,15 +19,19 @@ namespace SarahNLP
     {
         public ToneAnalyzerService ToneAnalyzer { get; }
 
-        public WatsonToneAnalyzer()
+        public WatsonToneAnalyzer(string apiKey, string serviceUrl)
         {
-            IamAuthenticator authenticator = new IamAuthenticator(
-                apikey: "v5A8Bi-pEFpofuaFlqAFgwOtLe-wBVsn1z4WT6JiHyeE"
-            );
+            {
+                IamAuthenticator authenticator = new IamAuthenticator(
+                    apikey: "v5A8Bi-pEFpofuaFlqAFgwOtLe-wBVsn1z4WT6JiHyeE"
+                );
 
-            ToneAnalyzer = new ToneAnalyzerService("2017-09-21", authenticator);
-            ToneAnalyzer.SetServiceUrl(
-                "https://api.us-south.tone-analyzer.watson.cloud.ibm.com/instances/94200b79-e762-4114-9d4f-9797fb3526d8");
+//            IamAuthenticator authenticator = new IamAuthenticator(apikey: apiKey);
+                ToneAnalyzer = new ToneAnalyzerService("2017-09-21", authenticator);
+                //ToneAnalyzer.SetServiceUrl(serviceUrl);  
+                ToneAnalyzer.SetServiceUrl(
+                    "https://api.us-south.tone-analyzer.watson.cloud.ibm.com/instances/94200b79-e762-4114-9d4f-9797fb3526d8");
+            }
         }
 
         /// <summary>
@@ -35,7 +42,22 @@ namespace SarahNLP
         {
             foreach (var message in db.Messages)
             {
+                Console.WriteLine($"Processing message of type {message.GetType().Name} with id: {message.MessageId}");
                 ProcessMessage(message);
+                PrintToneSummary(message);
+            }
+        }
+
+        private void PrintToneSummary(Message message)
+        {
+            if (message is ContentMessage contentMessage)
+            {
+                Console.WriteLine($"Message Id: {message.MessageId}");
+                Console.WriteLine($"Tone Scores");
+                foreach (var tonesScore in message.ToneScores)
+                {
+                    Console.WriteLine($"\t Tone {tonesScore.ToneName} Score: {tonesScore.Score}");
+                }
             }
         }
 
@@ -44,9 +66,8 @@ namespace SarahNLP
         /// </summary>
         /// <param name="m"></param>
         /// <returns></returns>
-        public Message ProcessMessage(Message m)
+        public object ProcessMessage(Message m)
         {
-            Console.WriteLine($"Processing message of type {m.GetType().Name} with id: {m.MessageId}");
             if (m is ContentMessage contentMessage)
             {
                 DetailedResponse<ToneAnalysis> result = AnalyzeTone(contentMessage);
@@ -59,6 +80,8 @@ namespace SarahNLP
                         ToneType = ToneType.Document
                     });
                 }
+
+                return result;
             }
 
             else if (m is SmsThread thread)
@@ -78,15 +101,15 @@ namespace SarahNLP
                     }
                 }
 
-                result.PrintDump();
+                return result;
             }
 
-            return m;
+            return null;
         }
 
         public DetailedResponse<ToneAnalysis> AnalyzeTone(ContentMessage message)
         {
-            var result = ToneAnalyzer.Tone(new ToneInput() {Text = message.ContentText}, sentences: false);
+            var result = ToneAnalyzer.Tone(new ToneInput() {Text = message.ContentText}, sentences: true);
             return result;
         }
 

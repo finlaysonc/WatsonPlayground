@@ -50,7 +50,6 @@ namespace SarahNLP.Models
 
         public static SaraDbContext CreateInMemoryContext()
         {
-
             var options = new DbContextOptionsBuilder<SaraDbContext>()
                 .UseInMemoryDatabase("SaraDb")
                 .Options;
@@ -95,4 +94,3 @@ namespace SarahNLP.Models
         }
     }
 }
-
