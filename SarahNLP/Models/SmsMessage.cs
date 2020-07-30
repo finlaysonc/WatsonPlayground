@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography.X509Certificates;
 
 namespace SarahNLP.Models
 {
@@ -8,14 +10,23 @@ namespace SarahNLP.Models
     {
         public SmsMessage()
         {
+            ToneScores = new List<ToneScore>();
         }
 
         public int SmsMessageId { get; set; }
+
         public string MessageText { get; set; }
+
         public string User { get; set; }
+
         public DateTimeOffset Created { get; set; }
 
-        [ForeignKey("MessageId")]
+        public int MessageId { get; set; }
+
+        [ForeignKey(nameof(MessageId))]
         public SmsThread SmsThread { get; set; }
+
+        [InverseProperty(nameof(ToneScore.SmsMessageId))]
+        public ICollection<ToneScore> ToneScores { get; set; }
     }
 }

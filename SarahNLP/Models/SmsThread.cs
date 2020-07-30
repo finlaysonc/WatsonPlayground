@@ -10,7 +10,7 @@ namespace SarahNLP.Models
         {
             SmsMessages = new List<SmsMessage>();
         }
-
+            
         [InverseProperty("SmsThread")]
         public ICollection<SmsMessage> SmsMessages { get; set; }
     }

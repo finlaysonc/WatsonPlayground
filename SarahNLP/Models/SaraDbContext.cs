@@ -13,6 +13,7 @@ namespace SarahNLP.Models
         public DbSet<SmsThread> SmsThreads { get; set; }
         public DbSet<SmsMessage> SmsMessages { get; set; }
         public DbSet<ContentMessage> ContentMessages { get; set; }
+        public DbSet<ToneScore> Tones{get;set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
