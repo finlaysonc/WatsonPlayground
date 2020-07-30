@@ -21,17 +21,9 @@ namespace SarahNLP
 
         public WatsonToneAnalyzer(string apiKey, string serviceUrl)
         {
-            {
-                IamAuthenticator authenticator = new IamAuthenticator(
-                    apikey: "v5A8Bi-pEFpofuaFlqAFgwOtLe-wBVsn1z4WT6JiHyeE"
-                );
-
-//            IamAuthenticator authenticator = new IamAuthenticator(apikey: apiKey);
-                ToneAnalyzer = new ToneAnalyzerService("2017-09-21", authenticator);
-                //ToneAnalyzer.SetServiceUrl(serviceUrl);  
-                ToneAnalyzer.SetServiceUrl(
-                    "https://api.us-south.tone-analyzer.watson.cloud.ibm.com/instances/94200b79-e762-4114-9d4f-9797fb3526d8");
-            }
+            IamAuthenticator authenticator = new IamAuthenticator(apikey: apiKey);
+            ToneAnalyzer = new ToneAnalyzerService("2017-09-21", authenticator);
+            ToneAnalyzer.SetServiceUrl(serviceUrl);
         }
 
         /// <summary>

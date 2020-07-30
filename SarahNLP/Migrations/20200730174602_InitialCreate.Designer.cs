@@ -10,7 +10,7 @@ using SarahNLP.Models;
 namespace SarahNLP.Migrations
 {
     [DbContext(typeof(SaraDbContext))]
-    [Migration("20200730165435_InitialCreate")]
+    [Migration("20200730174602_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,7 +28,7 @@ namespace SarahNLP.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTimeOffset>("Craeted")
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("getutcdate()");

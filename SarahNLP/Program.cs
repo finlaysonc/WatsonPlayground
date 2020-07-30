@@ -14,15 +14,14 @@ namespace SarahNLP
         public static void Main(string[] args)
         {
             var db = SaraDbContext.CreateContextToLocalDb();
-            //db.Database.EnsureDeleted();
-            //db.Database.Migrate();
-            //db.SeedData();
+            db.Database.EnsureDeleted();
+            db.Database.Migrate();
+            db.SeedData();
 
-            //var apiKey="v5A8Bi-pEFpofuaFlqAFgwOtLe-wBVsn1z4WT6JiHyeE";
-            //var url = "https://api.us-south.tone-analyzer.watson.cloud.ibm.com/instances/94200b79-e762-4114-9d4f-9797fb3526d8";
-            WatsonToneAnalyzer analyzer = new WatsonToneAnalyzer(
-                ConfigurationManager.AppSettings["WatsonToneAnalyzerApiKey"],
-                ConfigurationManager.AppSettings["WatsonToneAnalyzerUrl"]);;
+            var apiKey = ConfigurationManager.AppSettings["WatsonToneAnalyzerApiKey"];
+            var url = ConfigurationManager.AppSettings["WatsonToneAnalyzerUrl"];
+            Console.WriteLine($"Connecting to Watson Tone Analyzer using api key: {apiKey} and url {url}");
+            WatsonToneAnalyzer analyzer = new WatsonToneAnalyzer(apiKey, url);
             analyzer.ProcessMessages(db);
         }
     }

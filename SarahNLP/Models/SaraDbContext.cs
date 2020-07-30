@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace SarahNLP.Models
@@ -14,8 +15,7 @@ namespace SarahNLP.Models
         {
         }
 
-        const string connection =
-            "Server=(localdb)\\MSSQLLocalDB;Database=Sara;Trusted_Connection=True;";
+        private static readonly string SqlConnection = ConfigurationManager.AppSettings["ConnectionString"];
 
         /// <summary>
         /// The message types are modeled as Table Per Hierarchy w/ a concrete base class, Message
@@ -30,20 +30,21 @@ namespace SarahNLP.Models
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlServer(connection);
+            => options.UseSqlServer(SqlConnection);
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Message>()
-                .Property(b => b.Craeted).HasDefaultValueSql("getutcdate()");
+                .Property(b => b.Created).HasDefaultValueSql("getutcdate()");
         }
 
 
         public static SaraDbContext CreateContextToLocalDb()
         {
+            Console.WriteLine(SqlConnection);
             var options = new DbContextOptionsBuilder<SaraDbContext>()
-                .UseSqlServer(connection)
+                .UseSqlServer(SqlConnection)
                 .Options;
             return new SaraDbContext(options);
         }
@@ -62,9 +63,10 @@ namespace SarahNLP.Models
             {
                 ContentText = "This is an email.  How are you today?"
             };
+            ContentMessages.Add(message);
+
+
             var thread = new SmsThread();
-
-
             thread.SmsMessages.Add(new SmsMessage()
             {
                 MessageText = "Hello, I'm having a problem with your product.",
@@ -87,9 +89,8 @@ namespace SarahNLP.Models
                 MessageText = "Sorry to hear that",
                 User = "agent",
             });
-
             SmsThreads.Add(thread);
-            ContentMessages.Add(message);
+
             SaveChanges();
         }
     }

@@ -13,7 +13,7 @@ namespace SarahNLP.Migrations
                 {
                     MessageId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Craeted = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "getutcdate()"),
+                    Created = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "getutcdate()"),
                     Discriminator = table.Column<string>(nullable: false),
                     ContentText = table.Column<string>(nullable: true)
                 },

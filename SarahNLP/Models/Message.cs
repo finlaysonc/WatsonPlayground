@@ -18,7 +18,7 @@ namespace SarahNLP.Models
         [Key]
         public int MessageId { get; set; }
 
-        public DateTimeOffset Craeted { get; set; }
+        public DateTimeOffset Created { get; set; }
 
         [InverseProperty(nameof(ToneScore.Message))]
         public ICollection<ToneScore> ToneScores { get; set; }
