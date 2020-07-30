@@ -47,7 +47,7 @@ namespace SarahNLP
         {
             foreach (var message in SaraDbContext.ContentMessages)
             {
-                Console.WriteLine($"Content Message Id: {message.MessageId}");
+                Console.WriteLine($"Content Message Id: {message.MessageId}; content starts with: {message.ContentText.Substring(0,20)}");
                 Console.WriteLine($"Tone Scores");
                 foreach (var tonesScore in message.ToneScores)
                 {
