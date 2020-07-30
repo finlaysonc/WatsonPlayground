@@ -18,7 +18,7 @@ namespace SarahNLP.Models
         private static readonly string SqlConnection = ConfigurationManager.AppSettings["ConnectionString"];
 
         /// <summary>
-        /// The message types are modeled as Table Per Hierarchy w/ a concrete base class, Message
+        /// The message types are modeled as Table Per Hierarchy w/ a concrete base class (Message)
         /// </summary>
         public DbSet<Message> Messages { get; set; }
 
@@ -29,6 +29,7 @@ namespace SarahNLP.Models
         public DbSet<ToneScore> ToneScores { get; set; }
 
 
+        //for Migrations
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlServer(SqlConnection);
 
@@ -49,19 +50,11 @@ namespace SarahNLP.Models
             return new SaraDbContext(options);
         }
 
-        public static SaraDbContext CreateInMemoryContext()
-        {
-            var options = new DbContextOptionsBuilder<SaraDbContext>()
-                .UseInMemoryDatabase("SaraDb")
-                .Options;
-            return new SaraDbContext(options);
-        }
-
         public void SeedData()
         {
             var message = new ContentMessage()
             {
-                ContentText = "This is an email.  How are you today?"
+                ContentText = "Skiing is a fun way to active in the winter months.  Growing up in Boston, we attempted to ski - but it was more like ice skating. When I moved to Montana, I learned that skiing on real snow is a different sport than what I learned in Boston.  It's a lot more fun."
             };
             ContentMessages.Add(message);
 

@@ -18,37 +18,55 @@ namespace SarahNLP
     public class WatsonToneAnalyzer
     {
         public ToneAnalyzerService ToneAnalyzer { get; }
+        public SaraDbContext SaraDbContext { get; }
 
-        public WatsonToneAnalyzer(string apiKey, string serviceUrl)
+        public WatsonToneAnalyzer(string apiKey, string serviceUrl, SaraDbContext db)
         {
             IamAuthenticator authenticator = new IamAuthenticator(apikey: apiKey);
             ToneAnalyzer = new ToneAnalyzerService("2017-09-21", authenticator);
             ToneAnalyzer.SetServiceUrl(serviceUrl);
+            SaraDbContext = db;
         }
 
         /// <summary>
         /// Processes all messages stored in the db
         /// </summary>
         /// <param name="db"></param>
-        public void ProcessMessages(SaraDbContext db)
+        public void ProcessMessages()
         {
-            foreach (var message in db.Messages)
+            foreach (var message in SaraDbContext.Messages)
             {
                 Console.WriteLine($"Processing message of type {message.GetType().Name} with id: {message.MessageId}");
                 ProcessMessage(message);
-                PrintToneSummary(message);
             }
+            SaraDbContext.SaveChanges();
+            PrintToneSummary();
         }
 
-        private void PrintToneSummary(Message message)
+        private void PrintToneSummary()
         {
-            if (message is ContentMessage contentMessage)
+            foreach (var message in SaraDbContext.ContentMessages)
             {
-                Console.WriteLine($"Message Id: {message.MessageId}");
+                Console.WriteLine($"Content Message Id: {message.MessageId}");
                 Console.WriteLine($"Tone Scores");
                 foreach (var tonesScore in message.ToneScores)
                 {
                     Console.WriteLine($"\t Tone {tonesScore.ToneName} Score: {tonesScore.Score}");
+                }
+            }
+
+            foreach (var message in SaraDbContext.SmsThreads)
+            {
+                Console.WriteLine($"SMS Thread Message Id: {message.MessageId}");
+                Console.WriteLine($"Message and Score(s)");
+                foreach (var individualTextMessage in message.SmsMessages)
+                {
+                    Console.WriteLine($"Message: {individualTextMessage.MessageText}");
+                    Console.WriteLine($"Tone Scores");
+                    foreach (var tonesScore in individualTextMessage.ToneScores)
+                    {
+                        Console.WriteLine($"\t Tone {tonesScore.ToneName} Score: {tonesScore.Score}");
+                    }
                 }
             }
         }
@@ -58,12 +76,12 @@ namespace SarahNLP
         /// </summary>
         /// <param name="m"></param>
         /// <returns></returns>
-        public object ProcessMessage(Message m)
+        public void ProcessMessage(Message m)
         {
             if (m is ContentMessage contentMessage)
             {
                 DetailedResponse<ToneAnalysis> result = AnalyzeTone(contentMessage);
-                foreach (IBM.Watson.ToneAnalyzer.v3.Model.ToneScore toneScore in result.Result.DocumentTone.Tones)
+                foreach (IBM.Watson.ToneAnalyzer.v3.Model.ToneScore toneScore in result.Result.DocumentTone.Tones.OrderByDescending(t=>t.Score))
                 {
                     m.ToneScores.Add(new ToneScore()
                     {
@@ -72,8 +90,6 @@ namespace SarahNLP
                         ToneType = ToneType.Document
                     });
                 }
-
-                return result;
             }
 
             else if (m is SmsThread thread)
@@ -82,21 +98,18 @@ namespace SarahNLP
                 foreach (var ua in result.Result.UtterancesTone)
                 {
                     var smsMessage = thread.SmsMessages.Single(x => x.MessageText == ua.UtteranceText);
-                    foreach (var ts in ua.Tones)
+                    foreach (var ts in ua.Tones.OrderByDescending(t=>t.Score))
                     {
                         smsMessage.ToneScores.Add(new ToneScore()
                         {
                             Score = ts.Score,
                             ToneName = ts.ToneName,
-                            ToneType = ToneType.Utterance
+                            ToneType = ToneType.Utterance,
+                            MessageId = m.MessageId
                         });
                     }
                 }
-
-                return result;
             }
-
-            return null;
         }
 
         public DetailedResponse<ToneAnalysis> AnalyzeTone(ContentMessage message)
