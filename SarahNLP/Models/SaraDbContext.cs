@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace SarahNLP.Models
 {
@@ -9,47 +10,60 @@ namespace SarahNLP.Models
         {
         }
 
-        public DbSet<Message> Messages { get; set; }
+        public DbSet<SmsThread> SmsThreads { get; set; }
+        public DbSet<SmsMessage> SmsMessages { get; set; }
+        public DbSet<ContentMessage> ContentMessages { get; set; }
 
-        public void SeedDatabase()
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //    ToneInput toneInput = new ToneInput()
-            //    {
-            //        Text =
-            //            "Team, I know that times are tough! Product sales have been disappointing for the past three quarters. We have a competitive product, but we need to do a better job of selling it!"
-            //    };
-
-            //    var result = toneAnalyzer.Tone(
-            //        toneInput: toneInput
-            //    );
-
-            //    Console.WriteLine(result.Response);
+            modelBuilder.Entity<Message>()
+                .Property(b => b.Craeted).HasDefaultValueSql("getutcdate()");
+        }
 
 
-            //    var options = new DbContextOptionsBuilder<SaraDbContext>()
-            //        .UseInMemoryDatabase(databaseName: "Test")
-            //        .Options;
+        public static SaraDbContext CreateDatabaseOfMessages()
+        {
+            var options = new DbContextOptionsBuilder<SaraDbContext>()
+                .UseInMemoryDatabase(databaseName: "Test")
+                .Options;
+
+            var context = new SaraDbContext(options);
+            {
+                var message = new ContentMessage()
+                {
+                    ContentText = "This is an email.  How are you today?"
+                };
+                var thread = new SmsThread();
 
 
+                thread.SmsMessages.Add(new SmsMessage()
+                {
+                    MessageText = "Hello, I'm having a problem with your product.",
+                    User = "customer",
+                });
 
-            //    using (var context = new SaraDbContext(options))
-            //    {
-            //        var message = new Message()
-            //        {
-            //            MessageType = MessageType.Email,
-            //            MessageText = "This is an email.  How are you today?"
-            //        };
-            //        message = new Message()
-            //        {
-            //            MessageType = MessageType.Email,
-            //            MessageText = "This is an email.  How are you today again?"
-            //        };
+                thread.SmsMessages.Add(new SmsMessage()
+                {
+                    MessageText = "OK, let me know what's going on, please.",
+                    User = "agent",
+                });
 
-            //        context.Messages.Add(message);
-            //        context.SaveChanges();
-            //    }
-            //}
-            //}
+                thread.SmsMessages.Add(new SmsMessage()
+                {
+                    MessageText = "Well, nothing is working :(.",
+                    User = "customer",
+                });
+                thread.SmsMessages.Add(new SmsMessage()
+                {
+                    MessageText = "Sorry to hear that",
+                    User = "agent",
+                });
+
+                context.SmsThreads.Add(thread);
+                context.ContentMessages.Add(message);
+                context.SaveChanges();
+                return context;
+            }
         }
     }
 }

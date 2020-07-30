@@ -38,15 +38,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\ContentMessage.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\MessageType.cs" />
     <Compile Include="Models\SaraDbContext.cs" />
+    <Compile Include="Models\SmsMessage.cs" />
+    <Compile Include="Models\SmsThread.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceExample.cs" />
     <Compile Include="WatsonToneAnalyzer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="DumpExtensions">
+      <Version>2.0.0</Version>
+    </PackageReference>
     <PackageReference Include="IBM.Cloud.SDK.Core" Version="1.1.0" />
     <PackageReference Include="IBM.Watson.ToneAnalyzer.v3">
       <Version>4.5.0</Version>
@@ -56,6 +61,12 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory">
       <Version>3.1.6</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational">
+      <Version>3.1.6</Version>
+    </PackageReference>
+    <PackageReference Include="ServiceStack.Text">
+      <Version>5.9.0</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,9 +1,20 @@
-﻿namespace SarahNLP.Models
+﻿using System;
+using System.Collections;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using SarahNLP.Models;
+
+namespace SarahNLP.Models
 {
-    public class Message
+    [Table("Messages")]
+    public abstract class Message
     {
+        [Key]
         public int MessageId { get; set; }
-        public MessageType MessageType { get; set; }
-        public string MessageText { get; set; }
+
+        public DateTimeOffset Craeted { get; set; }
+
+
     }
 }
